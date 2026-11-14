@@ -4,7 +4,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 // Boots the real kernel with a stub `tailscale` binary that records its argv.
-const CLI = "/home/user/valet/valet-core/packages/core/src/cli.ts";
+const CORE = process.env.VALET_CORE_DIR ?? join(import.meta.dir, "..", "..", "valet-core");
+const CLI = join(CORE, "packages/core/src/cli.ts");
 const ROOT = join(import.meta.dir, "..");
 
 let home: string;
