@@ -1,3 +1,4 @@
+import type { PluginContext } from "@valethq/sdk";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -20,6 +21,22 @@ export interface Resolved {
 }
 
 const UI_DEFAULT = "http://127.0.0.1:7418";
+
+/** Keys the settings panel may write. `command` stays config-only: it names the binary that runs. */
+export const PANEL_KEYS = ["mode", "httpsPort", "target"] as const;
+
+/** Panel values win over plugins.valet-tailscale.config, so the panel can change them without a restart. */
+export function effective(
+  ctx: Pick<PluginContext, "storage">,
+  config: TailscaleConfig | undefined,
+): TailscaleConfig {
+  const panel: Record<string, unknown> = {};
+  for (const key of PANEL_KEYS) {
+    const value = ctx.storage.kv.get<unknown>(key);
+    if (value !== undefined) panel[key] = value;
+  }
+  return { ...config, ...panel } as TailscaleConfig;
+}
 
 // spec-gap: nothing in PluginContext exposes another plugin's config; the UI port is read
 // back out of <valetHome>/config.toml|json the same way loadConfig does (12).

@@ -6,6 +6,7 @@
   "description": "Serves a local port over tailscale serve or funnel. Defaults to the valet-ui port.",
   "valet": "^0.1.0",
   "main": "./src/index.ts",
+  "provides": ["settings@1"],
   "configSchema": {
     "type": "object",
     "additionalProperties": false,
