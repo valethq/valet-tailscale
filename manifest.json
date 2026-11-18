@@ -10,11 +10,36 @@
   "configSchema": {
     "type": "object",
     "additionalProperties": false,
+    "x-group": "system",
     "properties": {
-      "mode": { "type": "string", "enum": ["serve", "funnel"] },
-      "httpsPort": { "type": "integer", "minimum": 1, "maximum": 65535 },
-      "target": { "type": "string" },
-      "command": { "type": "string" }
+      "mode": {
+        "type": "string",
+        "title": "Exposure",
+        "description": "Funnel puts the port on the public internet. Tailscale refuses ports it does not allow for funnel.",
+        "enum": ["serve", "funnel"],
+        "enumNames": ["Tailnet only (serve)", "Public internet (funnel)"],
+        "default": "serve"
+      },
+      "httpsPort": {
+        "type": "integer",
+        "title": "HTTPS port",
+        "description": "Port on the tailnet (or public) side. 443 unless you serve a second service.",
+        "minimum": 1,
+        "maximum": 65535,
+        "default": 443
+      },
+      "target": {
+        "type": "string",
+        "title": "Target",
+        "description": "Port, host:port, URL or unix:/path.sock. Blank serves the valet-ui address."
+      },
+      "command": {
+        "type": "string",
+        "title": "CLI command",
+        "description": "Binary to run, may include args. Use \"sudo tailscale\" when serve config needs root.",
+        "default": "tailscale",
+        "x-advanced": true
+      }
     }
   }
 }
